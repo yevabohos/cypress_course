@@ -1,5 +1,5 @@
 {
-  "name": "yevabohos_cypress_course",
+  "name": "cypress_course",
   "version": "1.0.0",
   "description": "Project for course",
   "main": "index.js",
@@ -8,10 +8,11 @@
   },
   "keywords": [
     "cypress",
-    "testing",
     "git",
-    "course",
-    "demo"
+    "js",
+    "testing",
+    "automation",
+    "qa"
   ],
   "author": "yevabohos",
   "license": "MIT"
