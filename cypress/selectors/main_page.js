@@ -7,4 +7,5 @@ export const main_page = {
   onboarding_accountNumber: "#bankaccount-accountNumber-input",
   onboarding_submit_button: '[data-test="bankaccount-submit"]',
   onboarding_success_window: '[data-test="user-onboarding-dialog-title"]',
+  sidebar_bankAccounts: '[data-test="sidenav-bankaccounts"]'
 };
