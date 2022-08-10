@@ -1,4 +1,5 @@
 import { main_page } from "../selectors/main_page";
+import { functions } from "../helpers/generate_username";
 import { sign_in_page } from "../selectors/sign_in_page";
 import { sign_up_page } from "../selectors/sign_up_new_user";
 
@@ -45,11 +46,6 @@ describe("[Sign in page] UI test", () => {
       .should("be.checked");
   });
 
-  it("should show disabled by default sign in btn", () => {
-    cy.get("#username").type("username");
-    cy.get("btn").click().should("not.be.disabled"); // can't find the right way
-  });
-
   it("should have 'Don't have an account? Sign Up' clickable link under 'Sign in' btn", () => {
     cy.get(
       "#root > div > main > div.makeStyles-paper-2 > form > div.MuiGrid-root.MuiGrid-container > div:nth-child(2) > a"
@@ -64,9 +60,12 @@ describe("[Sign in page] UI test", () => {
     ).should("have.attr", "href", "https://cypress.io");
   });
 })
+
     describe("Sign-up, sign-in, logout", () => {
+    const userName = functions.generateUsername();
     const password = "Great123!";
-      before("Visit sign-up page", () => {
+      
+    before("Visit sign-up page", () => {
     cy.visit("/");
     cy.get(sign_in_page.signUp_link).click();
     cy.url().should("contain", "/signup");
@@ -77,8 +76,8 @@ describe("[Sign in page] UI test", () => {
     cy.get(sign_up_page.firstName).type("Mary").should("have.value", "Mary");
     cy.get(sign_up_page.lastName).type("Smith").should("have.value", "Smith");
     cy.get(sign_up_page.username)
-      .type("missmaryday")
-      .should("have.value", "missmaryday");
+      .type(userName)
+      .should("have.value", userName);
     cy.get(sign_up_page.password).type(password).should("have.value", password);
     cy.get(sign_up_page.confirmPassword)
       .type(password)
@@ -96,8 +95,8 @@ describe("[Sign in page] UI test", () => {
     cy.intercept("POST", "/login").as("signin");
     cy.visit("/");
     cy.get(sign_in_page.username)
-      .type("missmaryday")
-      .should("have.value", "missmaryday");
+      .type(userName)
+      .should("have.value", userName);
     cy.get(sign_in_page.password).type(password).should("have.value", password);
     cy.get(sign_in_page.signIn_button)
       .should("be.enabled")
@@ -132,9 +131,27 @@ describe("[Sign in page] UI test", () => {
     cy.url().should("contain", "signin");
   });
 
-  // 1. should display login errors
+  it("should display login errors", () => {
+    cy.get(sign_in_page.username).type("missmaryday");
+    cy.get(sign_in_page.password).type("01").blur();
+    cy.get(sign_in_page.password_validation_message)
+      .should("be.visible")
+      .and("have.text", "Password must contain at least 4 characters");
+  });
 
-  // 2. should display signup errors
+  it("should display signup errors", () => {
+    cy.visit("/");
+    cy.get(sign_in_page.signUp_link).click();
+    cy.url().should("contain", "/signup");
+    cy.intercept("POST", "/users").as("signup");
+    cy.get(sign_up_page.firstName).type("Mary").should("have.value", "Mary");
+    cy.get(sign_up_page.lastName).type("Smith").should("have.value", "Smith");
+    cy.get("#username").click().blur();
+    cy.get("#username-helper-text").should(
+      "have.text",
+      "Username is required"
+    );
+  });
 
   it("should error for an invalid user", () => {
     cy.intercept("POST", "/login").as("signin");

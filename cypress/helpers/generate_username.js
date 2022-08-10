@@ -8,9 +8,9 @@ export const functions = {
       "sarahsmith_jay",
       "testingstaff",
     ];
-    function generator() {
-    result = adjective[Math.floor(Math.random() * names.length)];
-    return result
+    
+    const randomNum = Math.floor(Math.random() * 100);
+    const pickedNameIndex = Math.floor(Math.random() * names.length);
+    return `${names[pickedNameIndex]}${randomNum}`;
 }
   }
-}
