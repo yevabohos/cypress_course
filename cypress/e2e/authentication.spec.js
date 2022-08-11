@@ -127,7 +127,7 @@ describe("[Sign in page] UI test", () => {
 
   it("should allow a visitor to logout", () => {
     cy.intercept("POST", "/logout").as("logout");
-    cy.get(main_page.logout).click();
+    cy.get(main_page.sidebar_logout).click();
     cy.url().should("contain", "signin");
   });
 
