@@ -18,5 +18,5 @@ export const transactions_page = {
   return_button:
     '[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSizeSmall MuiButton-sizeSmall"]',
   transactions_list: '[class="ReactVirtualized__Grid ReactVirtualized__List"]',
-  accept_button: '[data-test="transaction-accept-request-PjMJR6W4O"]',
+
 };
