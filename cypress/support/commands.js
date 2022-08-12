@@ -73,6 +73,9 @@ Cypress.Commands.add("logout", () => {
   cy.url().should("contain", "signin");
 });
 
-        
+Cypress.Commands.add("switchUser", (userName, password) => {
+     cy.logout();
+     cy.signin(userName, password);
+   });     
 
  
