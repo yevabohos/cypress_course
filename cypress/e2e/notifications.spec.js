@@ -2,7 +2,6 @@ import { main_page } from "../selectors/main_page";
 import { transactions_page } from "../selectors/transactions_page";
 
 const password = "s3cret";
-const transactionAmount = "100";
 
 const userA = {
   username: "Allie2",
