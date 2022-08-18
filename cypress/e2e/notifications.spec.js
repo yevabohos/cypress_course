@@ -18,7 +18,7 @@ const userC = {
   username: "Tavares_Barrows",
   name: "Arely Kertzmann",
 };
-// 1. When user A likes a transaction of user B, user B should get notification that user A liked transaction
+
 it("When user A likes a transaction of user B, user B should get notification that user A liked transaction", () => {
    cy.signin(userB.username, password);
    cy.get(main_page.new_transaction_button).click();
@@ -39,7 +39,7 @@ it("When user A likes a transaction of user B, user B should get notification th
    cy.url().should("contain", "/notifications");
    cy.get(main_page.notifications_list).contains("Kaylin Homenick liked a transaction");
  });
-// 2. When user C likes a transaction between user A and user B, user A and user B should get notifications that user C liked transaction
+
 it("When user C likes a transaction between user A and user B, user A and user B should get notifications that user C liked transaction", () => {
   cy.switchUser(userC.username, password);
   cy.get(main_page.transactions_table)
@@ -62,7 +62,7 @@ it("When user C likes a transaction between user A and user B, user A and user B
       "Arely Kertzmann liked a transaction"
     );
 });
-// 3. When user A comments on a transaction of user B, user B should get notification that User A commented on their transaction
+
 it("When user A comments on a transaction of user B, user B should get notification that User A commented on their transaction", () => {
   cy.switchUser(userA.username, password);
   cy.get(main_page.mine_home).click();
@@ -80,7 +80,7 @@ it("When user A comments on a transaction of user B, user B should get notificat
     "Kaylin Homenick commented on a transaction."
   );
 });
-// 4. When user C comments on a transaction between user A and user B, user A and B should get notifications that user C commented on their transaction
+
 it("When user C comments on a transaction between user A and user B, user A and B should get notifications that user C commented on their transaction", () => {
   cy.switchUser(userC.username, password);
   cy.get(main_page.everyone_home).click();
@@ -104,7 +104,7 @@ it("When user C comments on a transaction between user A and user B, user A and 
     "Arely Kertzmann commented on a transaction."
   );
 });
-// 5. When user A sends a payment to user B, user B should be notified of payment
+
 it("When user A sends a payment to user B, user B should be notified of payment", () => {
    cy.switchUser(userA.username, password);
    cy.get(main_page.new_transaction_button).click();
@@ -120,7 +120,7 @@ it("When user A sends a payment to user B, user B should be notified of payment"
   cy.url().should("contain", "/notifications");
   cy.get(main_page.notifications_list).contains("Edgar Johns received payment.");
 });
-// 6. When user A sends a payment request to user C, user C should be notified of request from user A
+
 it("When user A sends a payment request to user C, user C should be notified of request from user A", () => {
   cy.switchUser(userA.username, password);
   cy.get(main_page.new_transaction_button).click();
