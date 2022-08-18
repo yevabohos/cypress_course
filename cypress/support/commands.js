@@ -3,6 +3,7 @@ import { sign_in_page } from "../selectors/sign_in_page";
 import { sign_up_page } from "../selectors/sign_up_new_user";
 
 Cypress.Commands.add("signup", (userName, password) => {
+
   cy.clearCookies();
   cy.intercept("POST", "/users").as("signup");
   cy.visit("/");
@@ -24,6 +25,7 @@ Cypress.Commands.add("signup", (userName, password) => {
 });
 
 Cypress.Commands.add("signin", (userName, password) => {
+
   cy.clearCookies();
   cy.intercept("POST", "/login").as("signin");
   cy.visit("/");
@@ -43,6 +45,7 @@ Cypress.Commands.add("signin", (userName, password) => {
 });
 
 Cypress.Commands.add("onboarding", () => {
+
   cy.get(main_page.getStarted_window)
     .should("be.visible")
     .and("contain.text", "Get Started with Real World App");
@@ -65,6 +68,11 @@ Cypress.Commands.add("onboarding", () => {
 });
 
 Cypress.Commands.add("logout", () => {
-  cy.get(main_page.logout).click();
+
+  cy.get(main_page.sidebar_logout).click();
   cy.url().should("contain", "signin");
 });
+
+        
+
+ 
