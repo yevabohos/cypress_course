@@ -30,4 +30,7 @@ export const main_page = {
   price_range: '[data-test="transaction-list-filter-amount-range-button"]',
   table_label:
     '[#root > div > main > div.MuiContainer-root.makeStyles-container-6.MuiContainer-maxWidthMd > div > div > div > div.MuiListSubheader-root.MuiListSubheader-sticky.MuiListSubheader-gutters"]',
-};
+  sidebar_user_name: '[data-test="sidenav-user-full-name"]',
+
+
+  };

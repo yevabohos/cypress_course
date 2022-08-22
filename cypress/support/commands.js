@@ -29,7 +29,7 @@ Cypress.Commands.add("signin", (userName, password) => {
   cy.clearCookies();
   cy.intercept("POST", "/login").as("signin");
   cy.visit("/");
-  cy.get(sign_in_page.username)
+  cy.get(sign_in_page.username , {timeout: 10000}).should('be.visible').click({ force: true })
     .type(userName)
     .should("have.value", userName);
   cy.get(sign_in_page.password)
