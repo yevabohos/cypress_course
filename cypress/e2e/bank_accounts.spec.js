@@ -7,22 +7,54 @@ describe ("Manipulation with bank account", () => {
   const password = "Great123!";
 
   before("Set-up your User", () => {
-    cy.signup(userName, password);
-    cy.signin(userName, password);
+    cy.signup_api(userName, password);
+    cy.signin_api(userName, password);
+    cy.logout_api();
+    cy.loginByXstate(userName, password);
     cy.onboarding();
-    cy.logout();
+    
   });
 
-  it("user should be able to delete a bank account", () => {
-    cy.signin(userName, password);
+  beforeEach(
+    "Intercept graphql requests and proceed to bank accounts page",
+    () => {
+    cy.loginByXstate(userName, password);
     cy.get(main_page.sidebar_bankAccounts).click();
     cy.url().should("contain", "bankaccounts");
+      cy.intercept("POST", "/graphql", (req) => {
+        const { body } = req;
+
+        if (
+          body.hasOwnProperty("operationName") &&
+          body.operationName === "ListBankAccount"
+        ) {
+          req.alias = "gqlListBankAccountQuery";
+        }
+
+        if (
+          body.hasOwnProperty("operationName") &&
+          body.operationName === "CreateBankAccount"
+        ) {
+          req.alias = "gqlCreateBankAccountMutation";
+        }
+
+        if (
+          body.hasOwnProperty("operationName") &&
+          body.operationName === "DeleteBankAccount"
+        ) {
+          req.alias = "gqlDeleteBankAccountMutation";
+        }
+      });
+    }
+  );
+
+  it("user should be able to delete a bank account", () => {
+    cy.url().should("contain", "bankaccounts");
     cy.get(bankAccount_page.deleteBank_button).click().should("have.text", "Delete");
-    cy.logout();
+    cy.logout_api();
   });
   
   it("allows user to create new bank account", () => {
-    cy.signin(userName, password);
     cy.get(main_page.sidebar_bankAccounts).click();
     cy.url().should("contain", "bankaccounts");
     cy.get(bankAccount_page.createBank_button).click();
@@ -55,6 +87,10 @@ describe ("Manipulation with bank account", () => {
   });
 
     it("should display bank account form errors", () => {
+    cy.get(main_page.sidebar_bankAccounts).click();
+    cy.url().should("contain", "bankaccounts");
+    cy.get(bankAccount_page.createBank_button).click();
+    cy.url().should("contain", "new");
     cy.get(bankAccount_page.bankName).type("qa").blur();
     cy.get(bankAccount_page.bankName_validation_message)
         .should("be.visible")

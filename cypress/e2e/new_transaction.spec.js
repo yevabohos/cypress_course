@@ -8,14 +8,14 @@ describe("Manipulations with Transactions", () => {
   const password = "Great123!";
 
   before("Set-up your User", () => {
-    cy.signup(userName, password);
-    cy.signin(userName, password);
+    cy.signup_api(userName, password);
+    cy.signin_api(userName, password);
+    cy.logout_api();
+    cy.loginByXstate(userName, password);
     cy.onboarding();
-    cy.logout();
   });
 
   it("user should be able to make a new payment", () => {
-    cy.signin(userName, password);
     cy.get(main_page.new_transaction_button).click();
     cy.get(transactions_page.user_list)
       .should("be.visible")
@@ -53,7 +53,7 @@ describe("Manipulations with Transactions", () => {
       .and("have.text", "Please enter a note");
     cy.get(transactions_page.pay_button).should("be.disabled");
     cy.get(transactions_page.request_button).should("be.disabled");
-    cy.logout();
+    cy.logout_api();
   });
 
   it("verifies the deposit for the receiver", () => {
@@ -69,9 +69,12 @@ describe("Manipulations with Transactions", () => {
     });
 
     it("searches for a user by attribute", () => {
-        cy.signin(userName, password);
-        cy.get(main_page.new_transaction_button).click();
-        cy.get(transactions_page.search_field).type("Katharina_Bernier");
-        cy.get(transactions_page.user_list).should("contain.text", "Edgar Johns");
+        cy.loginByXstate(userName, password);
+         cy.get(main_page.new_transaction_button).click();
+         cy.get(transactions_page.search_field).type("Katharina_Bernier");
+         cy.get(transactions_page.user_list).should(
+           "contain.text",
+           "Edgar Johns"
+         );
 });
 })

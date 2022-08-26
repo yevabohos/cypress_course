@@ -8,18 +8,19 @@ const password = "Great123!";
 
 describe("Update user settings", () => {
   before("Set-up your User", () => {
-    cy.signup(userName, password);
-    cy.signin(userName, password);
+    cy.signup_api(userName, password);
+    cy.signin_api(userName, password);
+    cy.logout_api();
+    cy.loginByXstate(userName, password);
     cy.onboarding();
-    cy.logout();
   }); 
 
   beforeEach("Login", () => {
-    cy.signin(userName, password);
+    cy.loginByXstate(userName, password);
     cy.get(main_page.sidebar_myAccount).click();
     cy.url().should("contain", "/user/settings");
     cy.intercept("PATCH", "/users/*").as("updateUser");
-  });
+});
 
   it("Should render the user settings form", () => {
     cy.get(user_settings.firstName_input).should("be.visible");
@@ -55,13 +56,15 @@ describe("Update user settings", () => {
       .should("be.visible")
       .and("have.text", "Phone number is not valid");
     cy.get(user_settings.submit_button).should("be.disabled");
+    cy.logout_api();
   });
 
   it("User should be able to update all settings in once", () => {
+    
     cy.get(user_settings.firstName_input).clear().type("Sunny");
     cy.get(user_settings.lastName_input).clear().type("August");
-    cy.get(user_settings.email_input).type("testqa.e071j@gmail.com");
-    cy.get(user_settings.phoneNumber_input).type("123987456");
+    cy.get(user_settings.email_input).clear().type("testqa.e071j@gmail.com");
+    cy.get(user_settings.phoneNumber_input).clear().type("123987456");
     cy.get(user_settings.submit_button)
       .click();
     cy.get(user_settings.firstName_input).should("have.value", "Sunny");
@@ -75,6 +78,7 @@ describe("Update user settings", () => {
   });
 
   it("User should be able to update first name", () => {
+    
     cy.get(user_settings.firstName_input).clear().type("James");
     cy.get(user_settings.lastName_input).should("have.value", "August");
     cy.get(user_settings.email_input).should(
@@ -89,6 +93,7 @@ describe("Update user settings", () => {
   });
 
   it("User should be able to update last name", () => {
+   
     cy.get(user_settings.lastName_input)
       .clear()
       .type("Zoo")
@@ -103,6 +108,7 @@ describe("Update user settings", () => {
   });
 
   it("User should be able to update phone number", () => {
+   
     cy.get(user_settings.phoneNumber_input).clear().type("0987654321");
     cy.get(user_settings.submit_button)
       .click();
