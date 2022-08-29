@@ -2,6 +2,9 @@ import { main_page } from "../selectors/main_page";
 import { sign_in_page } from "../selectors/sign_in_page";
 import { sign_up_page } from "../selectors/sign_up_new_user";
 
+const apiUrl = "http://localhost:3001";
+
+
 Cypress.Commands.add("signup", (userName, password) => {
 
   cy.clearCookies();
@@ -73,9 +76,59 @@ Cypress.Commands.add("logout", () => {
   cy.url().should("contain", "signin");
 });
 
-Cypress.Commands.add("switchUser", (userName, password) => {
+  Cypress.Commands.add("switchUser", (userName, password) => {
      cy.logout();
      cy.signin(userName, password);
    });     
 
- 
+  
+   Cypress.Commands.add("signin_api", (userName, password) => {
+  cy.request("POST", `${apiUrl}/login`, {
+    username: userName,
+    password: password,
+  });
+});
+
+Cypress.Commands.add("signup_api", (userName, password) => {
+  cy.request("POST", `${apiUrl}/users`, {
+    firstName: "Day",
+    lastName: "Moon",
+    username: userName,
+    password: password,
+    confirmPassword: password,
+  });
+});
+
+Cypress.Commands.add("logout_api", () => {
+  cy.request("POST", `${apiUrl}/logout`);
+});
+
+Cypress.Commands.add("loginByXstate", (username, password = "s3cret") => {
+  const log = Cypress.log({
+    name: "loginbyxstate",
+    displayName: "LOGIN BY XSTATE",
+    message: [`🔐 Authenticating | ${username}`],
+    autoEnd: false,
+  });
+
+  cy.intercept("POST", "/login").as("loginUser");
+  cy.intercept("GET", "/checkAuth").as("getUserProfile");
+  cy.visit("/signin", { log: false });
+
+  cy.window({ log: false }).then((win) =>
+    win.authService.send("LOGIN", { username, password })
+  );
+
+  
+  cy.url().should("not.contain", "/signin");
+
+  return cy
+    .get('[data-test="list-skeleton"]')
+    .should("not.exist")
+    .then(() => {
+      log.snapshot("after");
+      log.end();
+    });
+});
+
+
