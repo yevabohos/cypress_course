@@ -22,7 +22,7 @@ const userC = {
   it("transactions navigation tabs should be hidden on a transaction view page", () => {
     cy.signin(userA.username, password);
     cy.get(main_page.transactions_table)
-      .contains("Kaylin Homenick requested Arely Kertzmann")
+      .contains("Edgar Johns requested Kaylin Homenick")
       .click({ force: true });
     cy.get(main_page.transaction_info)
       .should("be.visible")
